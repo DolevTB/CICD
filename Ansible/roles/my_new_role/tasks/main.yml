@@ -1,0 +1,36 @@
+---
+- name: Update packages
+  yum:
+      name: '*'
+      state: latest
+
+- name: install packages
+  yum:
+    name:
+      - git
+      - python3-pip
+      - yum-utils
+    state: present
+
+
+- name: add docker-ce-repo
+  shell: |
+    yum-config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
+
+
+- name: install docker-ce, docker-ce-cli, containerd.io, docker-compose 
+  yum:
+    name: docker
+    state: present
+
+
+- name: start and enable docker
+  service:
+    name: docker
+    state: started
+    enabled: yes
+
+- name: copy ssh key
+  copy:
+      src: "/home/ec2-user/.ssh/dolev.pem"
+      dest: "/home/ec2-user/.ssh/dolev.pem"

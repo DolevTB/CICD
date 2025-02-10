@@ -1,0 +1,21 @@
+plugin: amazon.aws.aws_ec2
+regions:
+  - us-east-1
+allow_duplicated_hosts: false
+keyed_groups:
+  - prefix: tag
+    key: tags
+  - key: tags.Name
+    separator: ''
+
+  
+  
+filters:
+  instance-state-name: running
+  tag:Owner:
+      - 'dolevgeva'
+  tag:Workspace:
+      - 'Production'
+compose:
+  ansible_host: private_ip_address
+  host_name: tags.Name
