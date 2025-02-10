@@ -1,0 +1,48 @@
+Pseudo code:
+1.Set up an infrastructure, this is going to be my workspace:
+Make sure I got:
+- python
+- java
+- docker
+- ansible
+- jenkins
+- git
+
+2. Write 2 playbook that will run on prodcution workspace (another instance).
+set ssh connection to my production server.
+set aws configure.
+set connection to git with accsess token.
+The first infra.yaml: 
+- install epel-release package
+- install git, python-pip, yum-utils
+- add docker-ce repo.
+- Install docker-ce, docker-ce-cli, containerd.io, docker-compose
+- Start Docker
+- Copy ssh key
+- Clone app repo
+- Build docker image and push to DockerHub
+- Start docker app
+The second destroy-infra.yaml:
+- destroy the whole infrastructure.
+*the app will be pulled from https://github.com/DolevTB/CICD*
+
+3.Create a dockerfile for the app.
+
+4. Write a docker compose file.
+
+5. Set up jenkins
+
+6. Connect my jenkins to my github repo via webhook.
+*have to set up all credentials and plugins needed*
+
+7. set the pipeline file.
+
+8. make sure every (git) action triggers the pipeline.
+
+****always: pray to god.****
+
+Make_sure:
+change the keys
+I was using ami role
+change it to yours and your repo
+
