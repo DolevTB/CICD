@@ -1,0 +1,59 @@
+---
+- name: Update packages
+  yum:
+      name: '*'
+      state: latest
+  ignore_errors: true
+
+- name: install packages
+  yum:
+    name:
+      - git
+      - python3-pip
+      - yum-utils
+    state: present
+  ignore_errors: true
+
+
+- name: add docker-ce-repo
+  shell: |
+    yum-config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
+  ignore_errors: true
+
+
+- name: install docker-ce, docker-ce-cli, containerd.io, docker-compose 
+  yum:
+    name: docker
+    state: present
+  ignore_errors: true
+
+
+- name: start and enable docker
+  service:
+    name: docker
+    state: started
+    enabled: yes
+  ignore_errors: true
+
+- name: copy ssh key
+  copy:
+      src: "/home/ec2-user/.ssh/dolev.pem"
+      dest: "/home/ec2-user/.ssh/dolev.pem"
+  ignore_errors: true
+
+- name: clone git repo, build container image and run the contianer
+  shell: |
+    git clone https://github.com/DolevTB/CICD.git
+    cd ./CICD/app
+    sudo docker build -t flask .
+    sudo docker run -d --name flask -p 5000:5000 flask
+  ignore_errors: true
+
+- name: push to ecr
+  shell: |
+    sudo aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/c0m6s3p2
+    cd ./CICD/app
+    sudo docker build -t dolev-cats .
+    sudo docker tag dolev-cats:latest public.ecr.aws/c0m6s3p2/dolev-cats:latest
+    sudo docker push public.ecr.aws/c0m6s3p2/dolev-cats:latest
+  ignore_errors: true

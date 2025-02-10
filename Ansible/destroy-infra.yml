@@ -6,4 +6,4 @@
   vars:
     ansible_ssh_private_key_file: "/home/ec2-user/.ssh/dolev.pem"
   roles:
-    - role_infra
+    - role_destroy_infra

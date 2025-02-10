@@ -1,0 +1,43 @@
+---
+- name: remove packages
+  yum:
+    name:
+      - git
+      - python3-pip
+      - yum-utils
+    state: absent
+  ignore_errors: true
+
+- name: delete repo, build container image and run the contianer
+  shell: |
+    sudo rm -rf ~/CICD
+    sudo docker stop flask
+    sudo docker rm flask
+    sudo docker image rm flask
+  ignore_errors: true
+
+- name: remove docker-ce-repo
+  shell: |
+    sudo rm -f /etc/yum.repos.d/docker-ce.repo
+  ignore_errors: true
+
+
+- name: stop and disable docker
+  service:
+    name: docker
+    state: stopped
+    enabled: no
+  ignore_errors: true
+
+- name: remove docker-ce, docker-ce-cli, containerd.io, docker-compose 
+  yum:
+    name: docker
+    state: absent
+  ignore_errors: true
+
+- name: copy ssh key
+  file:
+      state: absent
+      path: "/home/ec2-user/.ssh/dolev.pem"
+  ignore_errors: true
+
